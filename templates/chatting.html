@@ -1,0 +1,82 @@
+{% include 'header.html'%}
+<script>
+  $(document).ready(function () {
+    get_chats('{{user_info.username}}');
+  });
+</script>
+<div class="m-grid__item m-grid__item--fluid m-wrapper">
+  <!-- END: Subheader -->
+  <div class="m-content">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <!--begin::Portlet-->
+
+        <div class="tab-content" style="margin-left: 200px">
+          <div class="tab-pane active" id="m_quick_sidebar_tabs_messenger" role="tabpanel">
+            <div class="m-messenger m-messenger--message-arrow m-messenger--skin-light">
+              <div class="m-messenger__messages m-scrollable">
+                <div class="chat">
+                  <div class="m-messenger__datetime">2:30PM</div>
+                  <div class="m-messenger__wrapper">
+                    <div class="m-messenger__message m-messenger__message--in">
+                      <div class="m-messenger__message-pic">
+                        <img src="../../static/assets/app/media/img//users/user3.jpg" alt="" />
+                      </div>
+                      <div class="m-messenger__message-body">
+                        <div class="m-messenger__message-arrow"></div>
+                        <div class="m-messenger__message-content">
+                          <div class="m-messenger__message-username">Megan wrote</div>
+                          <div class="m-messenger__message-text">Will the development team be joining ?</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="m-messenger__wrapper">
+                    <div class="m-messenger__message m-messenger__message--out">
+                      <div class="m-messenger__message-body">
+                        <div class="m-messenger__message-arrow"></div>
+                        <div class="m-messenger__message-content">
+                          <div class="m-messenger__message-text">Yes sure. I invited them as well</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="m-messenger__seperator"></div>
+              <div class="m-messenger__form">
+                <div class="m-messenger__form-controls">
+                  <input type="text" name="" id="text-chat" placeholder="Type here..." class="m-messenger__form-input" />
+                </div>
+                <div class="m-messenger__form-tools">
+                  <a onclick="post_chatting('{{user_info.username}}')" class="m-messenger__form-attachment">
+                    <i class="la la-paperclip"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          window.addEventListener('DOMContentLoaded', (event) => {
+            // Dapatkan elemen dengan kelas m-scrollable
+            let scrollableElement = document.querySelector('.m-scrollable');
+
+            // Lakukan pengecekan apakah elemen scrollable ditemukan
+            if (scrollableElement) {
+              let lastMessage = scrollableElement.lastElementChild;
+              if (lastMessage) {
+                lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+              }
+            } else {
+              alert('tidak berhasil');
+            }
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'footer.html'%}
+<!-- akhir bagian isi -->
