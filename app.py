@@ -228,13 +228,12 @@ def posting():
         user_info = db.users.find_one({"username": payload["id"]})
         comment_receive = request.form["comment_give"]
         date_receive = request.form["date_give"]
-        decrypted_text = encrypt_text(key_128bit, comment_receive)
-        print(decrypt_text)
+        comment_encrypt = encrypt_text(key_128bit, comment_receive)
         doc = {
-            "username": user_info["username"],
+            "username":user_info["username"],
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
-            "comment": decrypted_text,
+            "comment": comment_encrypt,
             "date": date_receive,
         }
         db.posts.insert_one(doc)
@@ -252,12 +251,19 @@ def posting_chat():
         comment_receive = request.form["comment_give"]
         date_receive = request.form["date_give"]
         username_tujuan = request.form["username"]
+        isi_chat_encrypt = encrypt_text(key_128bit, comment_receive)
+        username_encrypt = encrypt_text(key_128bit, user_info["username"])
+        profile_encrypt = encrypt_text(key_128bit, user_info["profile_name"])
+        profile_real_encrypt= encrypt_text(key_128bit, user_info["profile_pic_real"])
+        tujuan_encrypt=encrypt_text(key_128bit, username_tujuan)
+        date_encrypt=encrypt_text(key_128bit, date_receive)
+
         doc = {
             "username": user_info["username"],
-            "profile_name": user_info["profile_name"],
-            "profile_pic_real": user_info["profile_pic_real"],
-            "isi_chat": comment_receive,
-            "date": date_receive,
+            "profile_name": profile_encrypt,
+            "profile_pic_real": profile_real_encrypt,
+            "isi_chat": isi_chat_encrypt,
+            "date": date_encrypt,
             "username_tujuan": username_tujuan,
             
         }
@@ -299,6 +305,9 @@ def get_chat():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
         user_info = db.users.find_one({"username": payload["id"]})
         username_receive = request.args.get("username_give")
+        username_encrypt=encrypt_text(key_128bit, username_receive)
+        user_info_encrypt=encrypt_text(key_128bit, user_info["username"])
+        print(username_encrypt)
         if username_receive == "":
             posts = list(db.chats.find({}).sort("date", 1))
         else:
@@ -310,11 +319,13 @@ def get_chat():
             {"username_tujuan": user_info["username"],"username":username_receive}
         ]
     }
-).sort("date", 1)
+)
             )
-        print(posts)
-
         for post in posts:
+            post["profile_name_dec"]=decrypt_text(key_128bit,post["profile_name"])
+            post["profile_pic_real_dec"]=decrypt_text(key_128bit,post["profile_pic_real"])
+            post["isi_chat_dec"]=decrypt_text(key_128bit,post["isi_chat"])
+            post["date_dec"]=decrypt_text(key_128bit,post["date"])
             if post["username"]==username_receive:
                 post["jenis"]='kawan'
             else:
@@ -341,6 +352,8 @@ def get_posts():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
         user_info = db.users.find_one({"username": payload["id"]})
         username_receive = request.args.get("username_give")
+        user=encrypt_text(key_128bit, user_info["username"])
+        username=encrypt_text(key_128bit, str(username_receive))
         if username_receive == "":
             posts = list(db.posts.find({}).sort("date", -1).limit(20))
         else:
@@ -348,15 +361,15 @@ def get_posts():
                 db.posts.find(
     {
         "$or": [
-            {"username": username_receive},
             {"username": user_info["username"]}
         ]
     }
 ).sort("date", -1)
             )
-        
+        print(posts)
 
         for post in posts:
+            
             post["isi_pesan"]=decrypt_text(key_128bit,post["comment"])
             if post["username"]==username_receive:
                 post["jenis"]='kawan'

@@ -80,9 +80,10 @@ function get_chats(username) {
     success: function (response) {
       if (response['result'] === 'success') {
         let posts = response['posts'];
+        console.log(posts);
         for (let i = 0; i < posts.length; i++) {
           let post = posts[i];
-          let time_post = new Date(post['date']);
+          let time_post = new Date(post['date_dec']);
           let time_before = time2str(time_post);
 
           if (post['jenis'] == 'kawan') {
@@ -98,15 +99,15 @@ function get_chats(username) {
                     <div class="m-messenger__message m-messenger__message--in">
                       <div class="m-messenger__message-pic">
                       <a class="image is-64x64" href="/user/${post['username']}">
-                      <img class="is-rounded" src="/static/${post['profile_pic_real']}"
+                      <img class="is-rounded" src="/static/${post['profile_pic_real_dec']}"
                            alt="">
                         </a>
                       </div>
                       <div class="m-messenger__message-body">
                         <div class="m-messenger__message-arrow"></div>
                         <div class="m-messenger__message-content">
-                          <div class="m-messenger__message-username"><strong>${post['profile_name']}</strong> <small>@${post['username']}</small></div>
-                          <div class="m-messenger__message-text">${post['isi_chat']}</div>
+                          <div class="m-messenger__message-username"><strong>${post['profile_name_dec']}</strong> <small>@${post['username']}</small></div>
+                          <div class="m-messenger__message-text">${post['isi_chat_dec']}</div>
                         </div>
                       </div>
                     </div>
@@ -116,7 +117,7 @@ function get_chats(username) {
                       <div class="m-messenger__message-body">
                         <div class="m-messenger__message-arrow"></div>
                         <div class="m-messenger__message-content">
-                          <div class="m-messenger__message-text">${post['isi_chat']}</div>
+                          <div class="m-messenger__message-text">${post['isi_chat_dec']}</div>
                         </div>
                       </div>
                     </div>
@@ -155,7 +156,7 @@ function get_posts(username) {
           let html_temp = `<div class="box" id="${post['_id']}">
                                           <article class="media">
                                               <div class="media-left">
-                                                  <a class="image is-64x64" href="/user/${post['username']}">
+                                                  <a class="image is-64x64" href="#">
                                                       <img class="is-rounded" src="/static/${post['profile_pic_real']}"
                                                            alt="Image">
                                                   </a>
@@ -241,7 +242,6 @@ function get_user(username) {
     url: `/data_user`,
     data: {},
     success: function (response) {
-      console.log(response['posts']);
       if (response['result'] === 'success') {
         let posts = response['posts'];
         for (let i = 0; i < posts.length; i++) {
